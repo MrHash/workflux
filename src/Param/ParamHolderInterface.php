@@ -16,10 +16,10 @@ interface ParamHolderInterface
 
     public function withParams(array $params): self;
 
-    public function withoutParam(string $param_name): ParamHolderInterface;
+    public function withoutParam(string $param_name): self;
 
     /** @param string[] $param_names */
-    public function withoutParams(array $param_names): ParamHolderInterface;
+    public function withoutParams(array $param_names): self;
 
     public function toArray(): array;
 }
