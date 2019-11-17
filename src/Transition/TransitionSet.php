@@ -10,14 +10,9 @@ use Workflux\Transition\TransitionInterface;
 
 final class TransitionSet implements IteratorAggregate, Countable
 {
-    /**
-     * @var Set $interal_set
-     */
+    /** @var Set */
     private $internal_set;
 
-    /**
-     * @param TransitionInterface[] $transitions
-     */
     public function __construct(array $transitions = [])
     {
         $this->internal_set = new Set(
@@ -27,11 +22,6 @@ final class TransitionSet implements IteratorAggregate, Countable
         );
     }
 
-    /**
-     * @param TransitionInterface $transition
-     *
-     * @return self
-     */
     public function add(TransitionInterface $transition): self
     {
         $transitions = $this->internal_set->toArray();
@@ -40,11 +30,6 @@ final class TransitionSet implements IteratorAggregate, Countable
         return new static($transitions);
     }
 
-    /**
-     * @param TransitionInterface $transition
-     *
-     * @return bool
-     */
     public function contains(TransitionInterface $transition): bool
     {
         foreach ($this->internal_set as $cur_transition) {
@@ -57,11 +42,6 @@ final class TransitionSet implements IteratorAggregate, Countable
         return false;
     }
 
-    /**
-     * @param callable $callback
-     *
-     * @return self
-     */
     public function filter(callable $callback): self
     {
         $set = clone $this;
@@ -70,25 +50,17 @@ final class TransitionSet implements IteratorAggregate, Countable
         return $set;
     }
 
-    /**
-     * @return Traversable
-     */
     public function getIterator(): Traversable
     {
         return $this->internal_set->getIterator();
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return $this->internal_set->count();
     }
 
-    /**
-     * @return TransitionInterface[]
-     */
+    /** @return TransitionInterface[] */
     public function toArray(): array
     {
         return $this->internal_set->toArray();

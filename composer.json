@@ -56,18 +56,15 @@
         "sniff": [
             "@code-sniffer-autofix",
             "@code-sniffer",
-            "@copy-paste-detector",
             "psalm"
         ],
         "code-sniffer": "phpcs -p -s --extensions=php --standard='PSR1,PSR2' src/ tests/",
         "code-sniffer-autofix": "phpcbf --standard=PSR2 -d tabWidth=4 src/ tests/",
-        "copy-paste-detector": "phpcpd src/ tests/",
         "php-loc": "phploc src",
         "php-test": "phpunit",
         "reports": [
             "phploc --log-xml ./build/coverage/logs/phploc.xml --progress src || echo",
-            "phpcs -p -s --extensions=php --report=checkstyle --report-file=./build/coverage/logs/checkstyle.xml --standard='PSR1,PSR2' src/ tests/ || echo",
-            "phpcpd --log-pmd ./build/coverage/logs/phpcpd.xml --progress src/ tests/ || echo"
+            "phpcs -p -s --extensions=php --report=checkstyle --report-file=./build/coverage/logs/checkstyle.xml --standard='PSR1,PSR2' src/ tests/ || echo"
         ],
         "validate-json": "composer validate --no-check-all --no-check-lock",
         "validate-deps": "composer validate --with-dependencies --strict"

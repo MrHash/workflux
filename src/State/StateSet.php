@@ -12,14 +12,10 @@ use Workflux\State\StateMap;
 
 final class StateSet implements IteratorAggregate, Countable
 {
-    /**
-     * @var Set $internal_set
-     */
+    /** @var Set */
     private $internal_set;
 
-    /**
-     * @param StateInterface[] $states
-     */
+    /** @param StateInterface[] $states */
     public function __construct(array $states = [])
     {
         $this->internal_set = new Set(
@@ -29,9 +25,6 @@ final class StateSet implements IteratorAggregate, Countable
         );
     }
 
-    /**
-     * @return []
-     */
     public function splat(): array
     {
         $initial_state = null;
@@ -61,11 +54,6 @@ final class StateSet implements IteratorAggregate, Countable
         return [ $initial_state, $all_states, $final_states ];
     }
 
-    /**
-     * @param StateInterface
-     *
-     * @return self
-     */
     public function add(StateInterface $state): self
     {
         $cloned_set = clone $this;
@@ -74,35 +62,22 @@ final class StateSet implements IteratorAggregate, Countable
         return $cloned_set;
     }
 
-    /**
-     * @param StateInterface $state
-     *
-     * @return bool
-     */
     public function contains(StateInterface $state): bool
     {
         return $this->internal_set->contains($state);
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return $this->internal_set->count();
     }
 
-    /**
-     * @return Traversable
-     */
     public function getIterator(): Traversable
     {
         return $this->internal_set->getIterator();
     }
 
-    /**
-     * @return StateInterface[]
-     */
+    /** @return StateInterface[] */
     public function toArray(): array
     {
         return $this->internal_set->toArray();

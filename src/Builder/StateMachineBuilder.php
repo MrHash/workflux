@@ -15,29 +15,18 @@ use Workflux\Transition\TransitionSet;
 
 final class StateMachineBuilder implements StateMachineBuilderInterface
 {
-    /**
-     * @var Map $states
-     */
+    /** @var Map */
     private $states;
 
-    /**
-     * @var Map $states
-     */
+    /** @var Map */
     private $transitions;
 
-    /**
-     * @var string $state_machine_name
-     */
+    /** @var null|string */
     private $state_machine_name;
 
-    /**
-     * @var string $state_machine_class
-     */
+    /** @var string */
     private $state_machine_class;
 
-    /**
-     * @param string $state_machine_class
-     */
     public function __construct(string $state_machine_class)
     {
         $this->states = new Map;
@@ -53,23 +42,16 @@ final class StateMachineBuilder implements StateMachineBuilderInterface
         }
     }
 
-    /**
-     * @param string $class
-     *
-     * @return StateMachineInterface
-     */
     public function build(): StateMachineInterface
     {
         $states = new StateSet($this->states->values()->toArray());
         $transitions = new TransitionSet($this->transitions->values()->toArray());
+        if (!is_string($this->state_machine_name) || empty($this->state_machine_name)) {
+            throw new InvalidStructure('Trying to build statemachine without valid machine name.');
+        }
         return new $this->state_machine_class($this->state_machine_name, $states, $transitions);
     }
 
-    /**
-     * @param string $state_machine_name
-     *
-     * @return self
-     */
     public function addStateMachineName(string $state_machine_name): self
     {
         $builder = clone $this;
@@ -77,11 +59,6 @@ final class StateMachineBuilder implements StateMachineBuilderInterface
         return $builder;
     }
 
-    /**
-     * @param StateInterface $state
-     *
-     * @return self
-     */
     public function addState(StateInterface $state): self
     {
         $builder = clone $this;
@@ -89,11 +66,7 @@ final class StateMachineBuilder implements StateMachineBuilderInterface
         return $builder;
     }
 
-    /**
-     * @param StateInterface[] $states
-     *
-     * @return self
-     */
+    /** @param StateInterface[] $states */
     public function addStates(array $states): self
     {
         $builder = clone $this;
@@ -103,11 +76,6 @@ final class StateMachineBuilder implements StateMachineBuilderInterface
         return $builder;
     }
 
-    /**
-     * @param TransitionInterface $transition
-     *
-     * @return self
-     */
     public function addTransition(TransitionInterface $transition): self
     {
         if (!$this->states->hasKey($transition->getFrom())) {
@@ -127,11 +95,7 @@ final class StateMachineBuilder implements StateMachineBuilderInterface
         return $builder;
     }
 
-    /**
-     * @param TransitionInterface[] $transitions
-     *
-     * @return self
-     */
+    /** @param TransitionInterface[] $transitions */
     public function addTransitions(array $transitions): self
     {
         $builder = clone $this;

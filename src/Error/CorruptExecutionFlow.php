@@ -8,12 +8,6 @@ use Workflux\State\ExecutionTracker;
 
 class CorruptExecutionFlow extends RuntimeException implements ErrorInterface
 {
-    /**
-     * @param ExecutionTracker $execution_tracker
-     * @param int $max_cycles
-     *
-     * @return self
-     */
     public static function fromExecutionTracker(ExecutionTracker $execution_tracker, int $max_cycles): self
     {
         $cycle_crumbs = $execution_tracker->detectExecutionLoop();
@@ -22,7 +16,7 @@ class CorruptExecutionFlow extends RuntimeException implements ErrorInterface
             $message .= "It is likely that an intentional cycle inside the workflow isn't properly exiting.\n".
                 "The executed states where:\n";
         } else {
-            $message .= "Looks like there is a loop between: ";
+            $message .= 'Looks like there is a loop between: ';
         }
         $message .= implode(' -> ', $cycle_crumbs->toArray());
         return new self($message);

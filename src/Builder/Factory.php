@@ -28,9 +28,7 @@ final class Factory implements FactoryInterface
 
     const SUFFIX_OUT = '-output_schema';
 
-    /**
-     * @var mixed[] $default_classes
-     */
+    /** @var mixed[] */
     private static $default_classes = [
         'initial' => InitialState::class,
         'interactive' => InteractiveState::class,
@@ -39,32 +37,21 @@ final class Factory implements FactoryInterface
         'transition' => Transition::class
     ];
 
-    /**
-     * @var mixed[] $default_validation_schema
-     */
+    /** @var mixed[] */
     private static $default_validation_schema = [ ':any_name:' => [ 'type' => 'any' ] ];
 
-    /**
-     * @var ExpressionLanguage $expression_engine
-     */
+    /** @var ExpressionLanguage */
     private $expression_engine;
 
-    /**
-     * @param array $defaultss_map
-     * @param ExpressionLanguage|null $expression_engine
-     */
+    /** @var Map */
+    private $class_map;
+
     public function __construct(array $class_map = [], ExpressionLanguage $expression_engine = null)
     {
         $this->expression_engine = $expression_engine ?? new ExpressionLanguage;
         $this->class_map = new Map(array_merge(self::$default_classes, $class_map));
     }
 
-    /**
-     * @param string $name
-     * @param mixed[]|null $state
-     *
-     * @return StateInterface
-     */
     public function createState(string $name, array $state = null): StateInterface
     {
         $state = Maybe::unit($state);
@@ -91,13 +78,6 @@ final class Factory implements FactoryInterface
         return $state_instance;
     }
 
-    /**
-     * @param string $from
-     * @param string $to
-     * @param  mixed[]|null $transition
-     *
-     * @return TransitionInterface
-     */
     public function createTransition(string $from, string $to, array $config = null): TransitionInterface
     {
         $transition = Maybe::unit($config);
@@ -121,11 +101,6 @@ final class Factory implements FactoryInterface
         return new $implementor($from, $to, $settings, $constraints);
     }
 
-    /**
-     * @param Maybe $state
-     *
-     * @return string
-     */
     private function resolveStateImplementor(Maybe $state): string
     {
         switch (true) {
@@ -150,12 +125,6 @@ final class Factory implements FactoryInterface
         return $state_implementor;
     }
 
-    /**
-     * @param string $name
-     * @param  Maybe $state
-     *
-     * @return ValidatorInterface
-     */
     private function createValidator(string $name, Maybe $state): ValidatorInterface
     {
         return new Validator(
@@ -170,12 +139,6 @@ final class Factory implements FactoryInterface
         );
     }
 
-    /**
-     * @param string $name
-     * @param array $schema_definition
-     *
-     * @return SchemaInterface
-     */
     private function createValidationSchema(string $name, array $schema_definition): SchemaInterface
     {
         return new Schema($name, [ 'type' => 'assoc', 'properties' => $schema_definition ], new PhpSchemaFactory);

@@ -6,10 +6,6 @@ use Workflux\StateMachineInterface;
 
 interface RendererInterface
 {
-    /**
-     * @param  StateMachineInterface $state_machine
-     *
-     * @return mixed
-     */
+    /** @return mixed */
     public function render(StateMachineInterface $state_machine);
 }

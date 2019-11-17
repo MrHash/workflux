@@ -6,27 +6,16 @@ use Workflux\Param\ParamHolderInterface;
 
 trait ParamHolderTrait
 {
-    /**
-     * @param mixed[] $params
-     */
+    /** @var array */
     private $params = [];
 
-    /**
-     * @param string $param_name
-     *
-     * @return mixed
-     */
+    /** @param string $param_name */
     public function __get($param_name)
     {
         return $this->get($param_name);
     }
 
-    /**
-     * @param string $param_name
-     * @param bool $treat_name_as_path
-     *
-     * @return mixed
-     */
+    /** @return mixed */
     public function get(string $param_name, bool $treat_name_as_path = true)
     {
         if (!$treat_name_as_path) {
@@ -44,23 +33,11 @@ trait ParamHolderTrait
         return array_key_exists($name_parts[0], $cur_val) ? $cur_val[$name_parts[0]] : null;
     }
 
-    /**
-     * @param string $param_name
-     *
-     * @return bool
-     */
     public function has(string $param_name): bool
     {
         return array_key_exists($param_name, $this->params);
     }
 
-    /**
-     * @param string $param_name
-     * @param mixed $param_value
-     * @param bool $treat_name_as_path
-     *
-     * @return self
-     */
     public function withParam(string $param_name, $param_value, bool $treat_name_as_path = true): ParamHolderInterface
     {
         $param_holder = clone $this;
@@ -81,11 +58,6 @@ trait ParamHolderTrait
         return $param_holder;
     }
 
-    /**
-     * @param mixed[] $params
-     *
-     * @return self
-     */
     public function withParams(array $params): ParamHolderInterface
     {
         $param_holder = clone $this;
@@ -93,11 +65,6 @@ trait ParamHolderTrait
         return $param_holder;
     }
 
-    /**
-     * @param string $param_name
-     *
-     * @return self
-     */
     public function withoutParam(string $param_name): ParamHolderInterface
     {
         if (!$this->has($param_name)) {
@@ -108,25 +75,18 @@ trait ParamHolderTrait
         return $param_holder;
     }
 
-    /**
-     * @param string[] $param_names
-     *
-     * @return self
-     */
+    /** @param string[] $param_names */
     public function withoutParams(array $param_names): ParamHolderInterface
     {
         return array_reduce(
             $param_names,
-            function (ParamHolderInterface $param_holder, $param_name) {
+            function (ParamHolderInterface $param_holder, string $param_name): ParamHolderInterface {
                 return $param_holder->withoutParam($param_name);
             },
             $this
         );
     }
 
-    /**
-     * @return mixed[]
-     */
     public function toArray(): array
     {
         return $this->params;

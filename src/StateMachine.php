@@ -20,36 +20,21 @@ final class StateMachine implements StateMachineInterface
 {
     const MAX_CYCLES = 20;
 
-    /**
-     * @var string $name
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * @var StateMap $states
-     */
+    /** @var StateMap */
     private $states;
 
-    /**
-     * @var StateTransitions $state_transitions
-     */
+    /** @var StateTransitions */
     private $state_transitions;
 
-    /**
-     * @var StateInterface $initial_state
-     */
+    /** @var StateInterface */
     private $initial_state;
 
-    /**
-     * @var StateMap $final_states
-     */
+    /** @var StateMap */
     private $final_states;
 
-    /**
-     * @param string $name
-     * @param StateSet $state_set
-     * @param TransitionSet $transition_set
-     */
     public function __construct(string $name, StateSet $state_set, TransitionSet $transition_set)
     {
         list($initial_state, $states, $final_states) = $state_set->splat();
@@ -60,12 +45,6 @@ final class StateMachine implements StateMachineInterface
         $this->state_transitions = new StateTransitions($states, $transition_set);
     }
 
-    /**
-     * @param InputInterface $input
-     * @param string $start_state
-     *
-     * @return OutputInterface
-     */
     public function execute(InputInterface $input, string $start_state = null): OutputInterface
     {
         $execution_tracker = new ExecutionTracker($this);
@@ -86,79 +65,52 @@ final class StateMachine implements StateMachineInterface
         return $output;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return StateMap
-     */
     public function getStates(): StateMap
     {
         return $this->states;
     }
 
-    /**
-     * @return StateInterface
-     */
     public function getInitialState(): StateInterface
     {
         return $this->initial_state;
     }
 
-    /**
-     * @return StateMap
-     */
     public function getFinalStates(): StateMap
     {
         return $this->final_states;
     }
 
-    /**
-     * @return StateTransitions
-     */
     public function getStateTransitions(): StateTransitions
     {
         return $this->state_transitions;
     }
 
-    /**
-     * @param InputInterface $input
-     * @param string $state_name
-     *
-     * @return StateInterface
-     */
-    private function determineStartState(InputInterface $input, string $state_name = null): StateInterface
+    private function determineStartState(InputInterface $input, string $state_name = null): ?StateInterface
     {
         if (!$state_name) {
             return $this->getInitialState();
         }
         if (!$this->states->has($state_name)) {
-            throw new ExecutionError("Trying to start statemachine execution at unknown state: ".$state_name);
+            throw new ExecutionError('Trying to start statemachine execution at unknown state: '.$state_name);
         }
         $start_state = $this->states->get($state_name);
         if ($start_state->isFinal()) {
-            throw new ExecutionError("Trying to (re)execute statemachine at final state: ".$state_name);
+            throw new ExecutionError('Trying to (re)execute statemachine at final state: '.$state_name);
         }
         if ($start_state->isInteractive() && !$input->hasEvent()) {
-            throw new ExecutionError("Trying to resume statemachine executing without providing an event/signal.");
+            throw new ExecutionError('Trying to resume statemachine executing without providing an event/signal.');
         }
         return $start_state->isInteractive()
             ? $this->activateTransition($input, Output::fromInput($start_state->getName(), $input))
             : $start_state;
     }
 
-    /**
-     * @param  InputInterface $input
-     * @param  OutputInterface $output
-     *
-     * @return StateInterface|null
-     */
-    private function activateTransition(InputInterface $input, OutputInterface $output)
+    private function activateTransition(InputInterface $input, OutputInterface $output): ?StateInterface
     {
         $next_state = null;
         foreach ($this->state_transitions->get($output->getCurrentState()) as $transition) {

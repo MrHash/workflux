@@ -4,15 +4,14 @@ namespace Workflux\Builder;
 
 use Shrink0r\PhpSchema\Factory;
 use Shrink0r\PhpSchema\FactoryInterface;
+use Shrink0r\PhpSchema\Property\PropertyInterface;
 use Shrink0r\PhpSchema\ResultInterface;
 use Shrink0r\PhpSchema\Schema;
 use Shrink0r\PhpSchema\SchemaInterface;
 
 final class StateMachineSchema implements SchemaInterface
 {
-    /**
-     * @var SchemaInterface $internal_schema
-     */
+    /** @var SchemaInterface */
     private $internal_schema;
 
     public function __construct()
@@ -20,21 +19,19 @@ final class StateMachineSchema implements SchemaInterface
         $this->internal_schema = new Schema('statemachine', [
             'type' => 'assoc',
             'properties' => [
-                "name" => [ "type" => "string" ],
-                "class" => [ "type" => "fqcn", "required" => false ],
-                "states" => [
-                    "type" => "assoc",
-                    "properties" => [ ":any_name:" => $this->getStateSchema() ]
+                'name' => [ 'type' => 'string' ],
+                'class' => [ 'type' => 'fqcn', 'required' => false ],
+                'states' => [
+                    'type' => 'assoc',
+                    'properties' => [ ':any_name:' => $this->getStateSchema() ]
                 ]
             ],
-            "customTypes" => [ "transition" => $this->getTransitionSchema() ]
+            'customTypes' => [ 'transition' => $this->getTransitionSchema() ]
         ], new Factory);
     }
 
     /**
      * Verify that the given data is structured according to the scheme.
-     *
-     * @param mixed[] $data
      *
      * @return ResultInterface Returns Ok on success; otherwise Error.
      */
@@ -45,8 +42,6 @@ final class StateMachineSchema implements SchemaInterface
 
     /**
      * Returns the schema's name.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -55,8 +50,6 @@ final class StateMachineSchema implements SchemaInterface
 
     /**
      * Returns the schema type. Atm only 'assoc' is supported.
-     *
-     * @return string
      */
     public function getType(): string
     {
@@ -76,7 +69,7 @@ final class StateMachineSchema implements SchemaInterface
     /**
      * Returns the schema's properties.
      *
-     * @return Property\PropertyInterface[]
+     * @return PropertyInterface[]
      */
     public function getProperties(): array
     {
@@ -85,8 +78,6 @@ final class StateMachineSchema implements SchemaInterface
 
     /**
      * Returns the factory, that is used by the schema.
-     *
-     * @return FactoryInterface
      */
     public function getFactory(): FactoryInterface
     {
@@ -101,58 +92,58 @@ final class StateMachineSchema implements SchemaInterface
     private function getStateSchema(): array
     {
         return [
-            "type" => "assoc" ,
-            "required" => false,
-            "properties" => [
-                "class" => [ "type" => "fqcn", "required" => false ],
-                "initial" => [
-                    "type" => "bool",
-                    "required" => false
+            'type' => 'assoc' ,
+            'required' => false,
+            'properties' => [
+                'class' => [ 'type' => 'fqcn', 'required' => false ],
+                'initial' => [
+                    'type' => 'bool',
+                    'required' => false
                 ],
-                "final" => [
-                    "type" => "bool",
-                    "required" => false
+                'final' => [
+                    'type' => 'bool',
+                    'required' => false
                 ],
-                "interactive" => [
-                    "type" => "bool",
-                    "required" => false
+                'interactive' => [
+                    'type' => 'bool',
+                    'required' => false
                 ],
-                "output" => [
-                    "type" => "assoc",
-                    "required" => false,
-                    "properties" => [
-                        ":any_name:" => [ "type" => "any" ]
+                'output' => [
+                    'type' => 'assoc',
+                    'required' => false,
+                    'properties' => [
+                        ':any_name:' => [ 'type' => 'any' ]
                     ]
                 ],
-                "input_schema" =>  [
-                    "type" => "assoc",
-                    "required" => false,
-                    "properties" => [
-                        ":any_name:" => [ "type" => "any" ]
+                'input_schema' =>  [
+                    'type' => 'assoc',
+                    'required' => false,
+                    'properties' => [
+                        ':any_name:' => [ 'type' => 'any' ]
                     ]
                 ],
-                "output_schema" =>  [
-                    "type" => "assoc",
-                    "required" => false,
-                    "properties" => [
-                        ":any_name:" => [ "type" => "any" ]
+                'output_schema' =>  [
+                    'type' => 'assoc',
+                    'required' => false,
+                    'properties' => [
+                        ':any_name:' => [ 'type' => 'any' ]
                     ]
                 ],
-                "settings" =>  [
-                    "type" => "assoc",
-                    "required" => false,
-                    "properties" => [
-                        ":any_name:" => [ "type" => "any" ]
+                'settings' =>  [
+                    'type' => 'assoc',
+                    'required' => false,
+                    'properties' => [
+                        ':any_name:' => [ 'type' => 'any' ]
                     ]
                 ],
-                "transitions" =>  [
-                    "type" => "assoc",
-                    "required" => true,
-                    "properties" => [
-                        ":any_name:" => [
-                            "type" => "enum" ,
-                            "required" => false,
-                            "one_of" => [ "string", "&transition" ]
+                'transitions' =>  [
+                    'type' => 'assoc',
+                    'required' => true,
+                    'properties' => [
+                        ':any_name:' => [
+                            'type' => 'enum' ,
+                            'required' => false,
+                            'one_of' => [ 'string', '&transition' ]
                         ]
                     ]
                 ]
@@ -162,25 +153,23 @@ final class StateMachineSchema implements SchemaInterface
 
     /**
      * Return php-schema definition that reflects the structural expectations towards transition (yaml)data.
-     *
-     * @return mixed[]
      */
     private function getTransitionSchema(): array
     {
         return [
-            "type" => "assoc",
-            "properties" => [
-                "class" => [ "type" => "fqcn", "required" => false ],
-                "settings" =>  [
-                    "type" => "assoc",
-                    "required" => false,
-                    "properties" => [
-                        ":any_name:" => [ "type" => "any" ]
+            'type' => 'assoc',
+            'properties' => [
+                'class' => [ 'type' => 'fqcn', 'required' => false ],
+                'settings' =>  [
+                    'type' => 'assoc',
+                    'required' => false,
+                    'properties' => [
+                        ':any_name:' => [ 'type' => 'any' ]
                     ],
                 ],
-                "when" => [
-                    "type" => "any",
-                    "required" => false
+                'when' => [
+                    'type' => 'any',
+                    'required' => false
                 ]
             ]
         ];

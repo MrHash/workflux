@@ -8,11 +8,7 @@ use Workflux\StateMachineInterface;
 
 final class DotGraphRenderer implements RendererInterface
 {
-    /**
-     * @param StateMachineInterface $state_machine
-     *
-     * @return mixed
-     */
+    /** @return mixed */
     public function render(StateMachineInterface $state_machine)
     {
         $node_id = 0;
@@ -28,12 +24,7 @@ final class DotGraphRenderer implements RendererInterface
         );
     }
 
-    /**
-     * @param  StateMachineInterface $state_machine
-     * @param  Map $node_id_map
-     *
-     * @return string[]
-     */
+    /** @return string[] */
     private function renderStateNodes(StateMachineInterface $state_machine, Map $node_id_map): array
     {
         $state_nodes = [];
@@ -48,12 +39,7 @@ final class DotGraphRenderer implements RendererInterface
         return $state_nodes;
     }
 
-    /**
-     * @param  StateMachineInterface $state_machine
-     * @param  Map $node_id_map
-     *
-     * @return string[]
-     */
+    /** @return string[] */
     private function renderTransitionEdges(StateMachineInterface $state_machine, Map $node_id_map): array
     {
         $edges = [];

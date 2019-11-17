@@ -11,32 +11,18 @@ use Workflux\Transition\TransitionInterface;
 
 final class Transition implements TransitionInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $from;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $to;
 
-    /**
-     * @var ParamHolderInterface $settings
-     */
+    /** @var ParamHolderInterface */
     private $settings;
 
-    /**
-     * @var ConstraintInterface[] $constraints
-     */
+    /** @var ConstraintInterface[] */
     private $constraints;
 
-    /**
-     * @param string $from
-     * @param string $to
-     * @param ParamHolderInterface|null $settings
-     * @param ConstraintInterface[] $constraints
-     */
     public function __construct(
         string $from,
         string $to,
@@ -51,12 +37,6 @@ final class Transition implements TransitionInterface
         })(...$constraints);
     }
 
-    /**
-     * @param  InputInterface $input
-     * @param  OutputInterface $output
-     *
-     * @return bool
-     */
     public function isActivatedBy(InputInterface $input, OutputInterface $output): bool
     {
         foreach ($this->constraints as $constraint) {
@@ -67,49 +47,31 @@ final class Transition implements TransitionInterface
         return true;
     }
 
-    /**
-     * @return string
-     */
     public function getFrom(): string
     {
         return $this->from;
     }
 
-    /**
-     * @return string
-     */
     public function getTo(): string
     {
         return $this->to;
     }
 
-    /**
-     * @return string
-     */
     public function getLabel(): string
     {
         return $this->settings->get('label') ?? '';
     }
 
-    /**
-     * @return array
-     */
     public function getConstraints(): array
     {
         return $this->constraints;
     }
 
-    /**
-     * @return bool
-     */
     public function hasConstraints(): bool
     {
         return !empty($this->constraints);
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         $label = implode("\nand ", $this->constraints);
@@ -117,9 +79,7 @@ final class Transition implements TransitionInterface
     }
 
     /**
-     * @param string $name
      * @param mixed $default
-     *
      * @return mixed
      */
     public function getSetting(string $name, $default = null)
@@ -127,19 +87,11 @@ final class Transition implements TransitionInterface
         return $this->settings->get($name) ?? $default;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
     public function hasSetting(string $name): bool
     {
         return $this->settings->has($name);
     }
 
-    /**
-     * @return ParamHolderInterface
-     */
     public function getSettings(): ParamHolderInterface
     {
         return $this->settings;

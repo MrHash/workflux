@@ -9,9 +9,6 @@ final class FinalState implements StateInterface
 {
     use StateTrait;
 
-    /**
-     * @return bool
-     */
     public function isFinal(): bool
     {
         return true;

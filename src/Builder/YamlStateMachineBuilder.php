@@ -13,25 +13,15 @@ use Workflux\StateMachineInterface;
 
 final class YamlStateMachineBuilder implements StateMachineBuilderInterface
 {
-    /**
-     * @var Parser $parser
-     */
+    /** @var Parser */
     private $parser;
 
-    /**
-     * @var string $yaml_filepath
-     */
+    /** @var string */
     private $yaml_filepath;
 
-    /**
-     * @var FactoryInterface $factory
-     */
+    /** @var FactoryInterface */
     private $factory;
 
-    /**
-     * @param string $yaml_filepath
-     * @param FactoryInterface|null $factory
-     */
     public function __construct(string $yaml_filepath, FactoryInterface $factory = null)
     {
         $this->parser = new Parser;
@@ -42,9 +32,6 @@ final class YamlStateMachineBuilder implements StateMachineBuilderInterface
         $this->factory = $factory ?? new Factory;
     }
 
-    /**
-     * @return StateMachineInterface
-     */
     public function build(): StateMachineInterface
     {
         $data = $this->parser->parse(file_get_contents($this->yaml_filepath));
@@ -61,11 +48,6 @@ final class YamlStateMachineBuilder implements StateMachineBuilderInterface
             ->build();
     }
 
-    /**
-     * @param  mixed[] $config
-     *
-     * @return mixed[]
-     */
     private function realizeConfig(array $config): array
     {
         $states = [];

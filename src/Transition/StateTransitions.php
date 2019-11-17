@@ -15,15 +15,9 @@ use Workflux\Transition\TransitionSet;
 
 final class StateTransitions implements IteratorAggregate, Countable
 {
-    /**
-     * @var Map $internal_map
-     */
+    /** @var Map */
     private $internal_map;
 
-    /**
-     * @param  StateMap $states
-     * @param  TransitionSet $transitions
-     */
     public function __construct(StateMap $states, TransitionSet $transitions)
     {
         $this->internal_map = new Map;
@@ -54,58 +48,32 @@ final class StateTransitions implements IteratorAggregate, Countable
         }
     }
 
-    /**
-     * @param string $state_name
-     *
-     * @return bool
-     */
     public function has(string $state_name): bool
     {
         return $this->internal_map->hasKey($state_name);
     }
 
-    /**
-     * @param string $state_name
-     *
-     * @return TransitionSet
-     */
     public function get(string $state_name): TransitionSet
     {
         return $this->internal_map->get($state_name, new TransitionSet);
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return $this->internal_map->count();
     }
 
-    /**
-     * @return Traversable
-     */
     public function getIterator(): Traversable
     {
         return $this->internal_map->getIterator();
     }
 
-    /**
-     * @return StateInterface[]
-     */
+    /** @return StateInterface[] */
     public function toArray()
     {
         return $this->internal_map->toArray();
     }
 
-    /**
-     * @param  StateMap $all_states
-     * @param  StateTransitions $state_transitions
-     * @param  StateInterface $state
-     * @param  StateSet $visited_states
-     *
-     * @return StateSet
-     */
     private function depthFirstScan(StateMap $states, StateInterface $state, StateSet $visited_states): StateSet
     {
         if ($visited_states->contains($state)) {

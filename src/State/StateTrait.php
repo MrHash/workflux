@@ -12,32 +12,18 @@ use Workflux\State\ValidatorInterface;
 
 trait StateTrait
 {
-    /**
-     * @var string $name
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * @var ParamHolderInterface $settings
-     */
+    /** @var ParamHolderInterface */
     private $settings;
 
-    /**
-     * @var ValidatorInterface $schemas
-     */
+    /** @var ValidatorInterface */
     private $validator;
 
-    /**
-     * @var ExpressionLanguage $expression_engine
-     */
+    /** @var ExpressionLanguage */
     private $expression_engine;
 
-    /**
-     * @param string $name
-     * @param ParamHolderInterface $settings
-     * @param ValidatorInterface $validator
-     * @param ExpressionLanguage $expression_engine
-     */
     public function __construct(
         string $name,
         ParamHolderInterface $settings,
@@ -55,11 +41,6 @@ trait StateTrait
         }
     }
 
-    /**
-     * @param InputInterface $input
-     *
-     * @return OutputInterface
-     */
     public function execute(InputInterface $input): OutputInterface
     {
         $this->validator->validateInput($this, $input);
@@ -68,50 +49,33 @@ trait StateTrait
         return $output;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
     public function isInitial(): bool
     {
         return false;
     }
 
-    /**
-     * @return bool
-     */
     public function isFinal(): bool
     {
         return false;
     }
 
-    /**
-     * @return bool
-     */
     public function isInteractive(): bool
     {
         return false;
     }
 
-     /**
-     * @return ValidatorInterface
-     */
     public function getValidator(): ValidatorInterface
     {
         return $this->validator;
     }
 
     /**
-     * @param string $name
      * @param mixed $default
-     *
      * @return mixed
      */
     public function getSetting(string $name, $default = null)
@@ -119,19 +83,11 @@ trait StateTrait
         return $this->settings->get($name) ?? $default;
     }
 
-    /**
-     * @return ParamHolderInterface
-     */
     public function getSettings(): ParamHolderInterface
     {
         return $this->settings;
     }
 
-    /**
-     * @param InputInterface $input
-     *
-     * @return OutputInterface
-     */
     private function generateOutput(InputInterface $input): OutputInterface
     {
         return new Output(
@@ -143,11 +99,6 @@ trait StateTrait
         );
     }
 
-    /**
-     * @param  InputInterface $input
-     *
-     * @return mixed[]
-     */
     private function evaluateInputExports(InputInterface $input): array
     {
         $exports = [];
@@ -157,19 +108,11 @@ trait StateTrait
         return $exports;
     }
 
-    /**
-     * @param  InputInterface $input
-     *
-     * @return mixed[]
-     */
     private function generateOutputParams(InputInterface $input): array
     {
         return [];
     }
 
-    /**
-     * @return string[]
-     */
     private function getRequiredSettings(): array
     {
         return [];

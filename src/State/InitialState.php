@@ -9,9 +9,6 @@ final class InitialState implements StateInterface
 {
     use StateTrait;
 
-    /**
-     * @return bool
-     */
     public function isInitial(): bool
     {
         return true;

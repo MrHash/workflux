@@ -11,14 +11,10 @@ use Workflux\State\StateInterface;
 
 final class StateMap implements IteratorAggregate, Countable
 {
-    /**
-     * @var Map $internal_map
-     */
+    /** @var Map */
     private $internal_map;
 
-    /**
-     * @param StateInterface[] $states
-     */
+    /** @param StateInterface[] $states */
     public function __construct(array $states = [])
     {
         $this->internal_map = new Map;
@@ -29,11 +25,6 @@ final class StateMap implements IteratorAggregate, Countable
         })(...$states);
     }
 
-    /**
-     * @param StateInterface
-     *
-     * @return self
-     */
     public function put(StateInterface $state): self
     {
         $cloned_map = clone $this;
@@ -41,11 +32,6 @@ final class StateMap implements IteratorAggregate, Countable
         return $cloned_map;
     }
 
-    /**
-     * @param Closure $query
-     *
-     * @return self
-     */
     public function find(Closure $query): self
     {
         $states = [];
@@ -57,12 +43,7 @@ final class StateMap implements IteratorAggregate, Countable
         return new self($states);
     }
 
-     /**
-     * @param Closure $query
-     *
-     * @return StateInterface|null
-     */
-    public function findOne(Closure $query)
+    public function findOne(Closure $query): ?StateInterface
     {
         foreach ($this->internal_map as $state) {
             if (true === $query($state)) {
@@ -72,45 +53,27 @@ final class StateMap implements IteratorAggregate, Countable
         return null;
     }
 
-    /**
-     * @param string $state_name
-     *
-     * @return bool
-     */
     public function has(string $state_name): bool
     {
         return $this->internal_map->hasKey($state_name);
     }
 
-    /**
-     * @param string $state_name
-     *
-     * @return StateInterface
-     */
     public function get(string $state_name): StateInterface
     {
         return $this->internal_map->get($state_name);
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return $this->internal_map->count();
     }
 
-    /**
-     * @return Traversable
-     */
     public function getIterator(): Traversable
     {
         return $this->internal_map->getIterator();
     }
 
-    /**
-     * @return StateInterface[]
-     */
+    /** @return StateInterface[] */
     public function toArray(): array
     {
         return $this->internal_map->toArray();

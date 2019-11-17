@@ -9,25 +9,11 @@ use Workflux\State\StateInterface;
 
 interface ValidatorInterface
 {
-    /**
-     * @param  StateInterface $state
-     * @param  InputInterface $input
-     */
-    public function validateInput(StateInterface $state, InputInterface $input);
+    public function validateInput(StateInterface $state, InputInterface $input): void;
 
-    /**
-     * @param  StateInterface $state
-     * @param  OutputInterface $output
-     */
-    public function validateOutput(StateInterface $state, OutputInterface $output);
+    public function validateOutput(StateInterface $state, OutputInterface $output): void;
 
-    /**
-     * @return SchemaInterface
-     */
     public function getInputSchema(): SchemaInterface;
 
-    /**
-     * @return SchemaInterface
-     */
     public function getOutputSchema(): SchemaInterface;
 }

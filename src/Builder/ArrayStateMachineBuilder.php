@@ -12,29 +12,18 @@ use Workflux\StateMachineInterface;
 
 final class ArrayStateMachineBuilder implements StateMachineBuilderInterface
 {
-    /**
-     * @var mixed[] $config
-     */
+    /** @var mixed[] */
     private $config;
 
-    /**
-     * @var FactoryInterface $factory
-     */
+    /** @var FactoryInterface */
     private $factory;
 
-    /**
-     * @param array $config
-     * @param FactoryInterface|null $factory
-     */
     public function __construct(array $config, FactoryInterface $factory = null)
     {
         $this->config = $config;
         $this->factory = $factory ?? new Factory;
     }
 
-    /**
-     * @return StateMachineInterface
-     */
     public function build(): StateMachineInterface
     {
         $data = $this->config;
@@ -51,11 +40,6 @@ final class ArrayStateMachineBuilder implements StateMachineBuilderInterface
             ->build();
     }
 
-    /**
-     * @param  mixed[] $config
-     *
-     * @return mixed[]
-     */
     private function realizeConfig(array $config): array
     {
         $states = [];
