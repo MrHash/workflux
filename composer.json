@@ -49,11 +49,12 @@
     },
     "scripts": {
         "test": [
-            "@php-test",
+            "@validate-json",
             "@code-sniffer",
-            "@validate-json"
+            "@php-test"
         ],
         "sniff": [
+            "@validate-json",
             "@code-sniffer-autofix",
             "@code-sniffer",
             "psalm"

@@ -38,6 +38,11 @@ trait ParamHolderTrait
         return array_key_exists($param_name, $this->params);
     }
 
+    public function getParams(): array
+    {
+        return $this->params;
+    }
+
     public function withParam(string $param_name, $param_value, bool $treat_name_as_path = true): ParamHolderInterface
     {
         $param_holder = clone $this;

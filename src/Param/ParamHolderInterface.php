@@ -9,6 +9,8 @@ interface ParamHolderInterface
 
     public function has(string $param_name): bool;
 
+    public function getParams(): array;
+
     /** @param mixed $param_value */
     public function withParam(string $param_name, $param_value, bool $treat_name_as_path = true): self;
 
