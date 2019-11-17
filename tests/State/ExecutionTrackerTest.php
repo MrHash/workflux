@@ -61,11 +61,11 @@ final class ExecutionTrackerTest extends TestCase
     private function createStateMachine()
     {
         $states = new StateSet([
-            $this->createState('initial', InitialState::CLASS),
+            $this->createState('initial', InitialState::class),
             $this->createState('foo'),
             $this->createState('bar'),
             $this->createState('foobar'),
-            $this->createState('final', FinalState::CLASS)
+            $this->createState('final', FinalState::class)
         ]);
         $transitions = new TransitionSet([
             new Transition('initial', 'foo'),

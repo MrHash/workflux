@@ -1,6 +1,7 @@
 # project related stuff
 /bin/phpunit
 /build/
+.phpunit.result.cache
 
 # composer related stuff
 /vendor/

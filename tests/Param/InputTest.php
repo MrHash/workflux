@@ -11,7 +11,7 @@ final class InputTest extends TestCase
 {
     public function testConstruct()
     {
-        $this->assertInstanceOf(InputInterface::CLASS, new Input([ 'foo' => 'bar' ]));
+        $this->assertInstanceOf(InputInterface::class, new Input([ 'foo' => 'bar' ]));
     }
 
     public function testWithEvent()

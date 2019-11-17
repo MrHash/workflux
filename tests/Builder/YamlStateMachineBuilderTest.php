@@ -3,6 +3,8 @@
 namespace Workflux\Tests\Builder;
 
 use Workflux\Builder\YamlStateMachineBuilder;
+use Workflux\Error\ConfigError;
+use Workflux\Error\MissingImplementation;
 use Workflux\Param\Input;
 use Workflux\Tests\TestCase;
 
@@ -26,65 +28,54 @@ final class YamlStateMachineBuilderTest extends TestCase
         (new YamlStateMachineBuilder($this->fixture('non_string_constraint')))->build();
     }
 
-    /**
-     * @expectedException Workflux\Error\ConfigError
-     */
     public function testNonExistantYamlFile()
     {
+        $this->expectException(ConfigError::class);
         new YamlStateMachineBuilder(__DIR__.'/foobar.yaml');
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\ConfigError
-     */
     public function testInvalidStateMachineSchema()
     {
+        $this->expectException(ConfigError::class);
         (new YamlStateMachineBuilder($this->fixture('invalid_schema')))->build();
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\ConfigError
-     * @expectedExceptionMessage
-        Trying to provide custom state that isn't initial but marked as initial in config.
-     */
     public function testInconsistentInitialState()
     {
+        $this->expectException(ConfigError::class);
+        $this->expectExceptionMessage(
+            "Trying to provide custom state that isn't initial but marked as initial in config."
+        );
         (new YamlStateMachineBuilder($this->fixture('inconsistent_initial')))->build();
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\ConfigError
-     * @expectedExceptionMessage
-        Trying to provide custom state that isn't interactive but marked as interactive in config.
-     */
     public function testInconsistentInteractiveState()
     {
+        $this->expectException(ConfigError::class);
+        $this->expectExceptionMessage(
+            "Trying to provide custom state that isn't interactive but marked as interactive in config."
+        );
         (new YamlStateMachineBuilder($this->fixture('inconsistent_interactive')))->build();
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\ConfigError
-     * @expectedExceptionMessage
-        Trying to provide custom state that isn't final but marked as final in config.
-     */
     public function testInconsistentFinalState()
     {
+        $this->expectException(ConfigError::class);
+        $this->expectExceptionMessage(
+            "Trying to provide custom state that isn't final but marked as final in config."
+        );
         (new YamlStateMachineBuilder($this->fixture('inconsistent_final')))->build();
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\MissingImplementation
-     */
     public function testNonImplementedState()
     {
+        $this->expectException(MissingImplementation::class);
         (new YamlStateMachineBuilder($this->fixture('non_implemented_state')))->build();
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\MissingImplementation
-     */
     public function testNonImplementedTransition()
     {
+        $this->expectException(MissingImplementation::class);
         (new YamlStateMachineBuilder($this->fixture('non_implemented_transition')))->build();
     } // @codeCoverageIgnore
 

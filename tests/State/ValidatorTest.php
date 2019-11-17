@@ -3,9 +3,10 @@
 namespace Workflux\Tests\State;
 
 use Shrink0r\PhpSchema\Factory;
-use Shrink0r\PhpSchema\Ok;
 use Shrink0r\PhpSchema\Schema;
 use Shrink0r\PhpSchema\SchemaInterface;
+use Workflux\Error\InvalidInput;
+use Workflux\Error\InvalidOutput;
 use Workflux\Param\Input;
 use Workflux\Param\Output;
 use Workflux\State\StateInterface;
@@ -22,7 +23,7 @@ final class ValidatorTest extends TestCase
             new Schema('input_schema', self::$default_schema, new Factory),
             new Schema('output_schema', self::$default_schema, new Factory)
         );
-        $this->assertInstanceOf(SchemaInterface::CLASS, $validator->getInputSchema());
+        $this->assertInstanceOf(SchemaInterface::class, $validator->getInputSchema());
     }
 
     public function testGetOutputSchema()
@@ -31,7 +32,7 @@ final class ValidatorTest extends TestCase
             new Schema('input_schema', self::$default_schema, new Factory),
             new Schema('output_schema', self::$default_schema, new Factory)
         );
-        $this->assertInstanceOf(SchemaInterface::CLASS, $validator->getOutputSchema());
+        $this->assertInstanceOf(SchemaInterface::class, $validator->getOutputSchema());
     }
 
     public function testValidateInput()
@@ -40,7 +41,7 @@ final class ValidatorTest extends TestCase
             new Schema('input_schema', self::$default_schema, new Factory),
             new Schema('output_schema', self::$default_schema, new Factory)
         );
-        $mocked_state = $this->createMock(StateInterface::CLASS);
+        $mocked_state = $this->createMock(StateInterface::class);
         $validator->validateInput($mocked_state, new Input([ 'foo' => 'bar' ]));
     }
 
@@ -50,37 +51,33 @@ final class ValidatorTest extends TestCase
             new Schema('input_schema', self::$default_schema, new Factory),
             new Schema('output_schema', self::$default_schema, new Factory)
         );
-        $mocked_state = $this->createMock(StateInterface::CLASS);
+        $mocked_state = $this->createMock(StateInterface::class);
         $validator->validateOutput($mocked_state, new Output('initial', [ 'foo' => 'bar' ]));
     }
 
-    /**
-     * @expectedException Workflux\Error\InvalidInput
-     */
     public function testInvalidInput()
     {
+        $this->expectException(InvalidInput::class);
         $input_schema = self::$default_schema;
         $input_schema['properties'] = [ 'foo' => [ 'type' => 'bool', 'required' => true ] ];
         $validator = new Validator(
             new Schema('input_schema', $input_schema, new Factory),
             new Schema('output_schema', self::$default_schema, new Factory)
         );
-        $mocked_state = $this->createMock(StateInterface::CLASS);
+        $mocked_state = $this->createMock(StateInterface::class);
         $validator->validateInput($mocked_state, new Input([ 'foo' => 'bar' ]));
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\InvalidOutput
-     */
     public function testInvalidOutput()
     {
+        $this->expectException(InvalidOutput::class);
         $output_schema = self::$default_schema;
         $output_schema['properties'] = [ 'foo' => [ 'type' => 'bool', 'required' => true ] ];
         $validator = new Validator(
             new Schema('input_schema', self::$default_schema, new Factory),
             new Schema('output_schema', $output_schema, new Factory)
         );
-        $mocked_state = $this->createMock(StateInterface::CLASS);
+        $mocked_state = $this->createMock(StateInterface::class);
         $validator->validateOutput($mocked_state, new Output('initial', [ 'foo' => 'bar' ]));
     } // @codeCoverageIgnore
 }

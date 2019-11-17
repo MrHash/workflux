@@ -19,10 +19,10 @@ final class DotGraphRendererTest extends TestCase
     public function testRenderer()
     {
         $states = new StateSet([
-            $this->createState('initial', InitialState::CLASS),
+            $this->createState('initial', InitialState::class),
             $this->createState('foobar'),
             $this->createState('bar'),
-            $this->createState('final', FinalState::CLASS)
+            $this->createState('final', FinalState::class)
         ]);
 
         $transitions = (new TransitionSet)

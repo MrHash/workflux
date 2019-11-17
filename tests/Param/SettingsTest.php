@@ -10,7 +10,7 @@ final class SettingsTest extends TestCase
 {
     public function testConstruct()
     {
-        $this->assertInstanceOf(ParamHolderInterface::CLASS, new Settings);
+        $this->assertInstanceOf(ParamHolderInterface::class, new Settings);
     }
 
     public function testHas()

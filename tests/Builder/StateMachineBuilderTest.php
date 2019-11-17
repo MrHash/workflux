@@ -3,13 +3,14 @@
 namespace Workflux\Tests\Builder;
 
 use Workflux\Builder\StateMachineBuilder;
-use Workflux\Param\Settings;
+use Workflux\Error\InvalidStructure;
+use Workflux\Error\MissingImplementation;
+use Workflux\Error\UnknownState;
 use Workflux\StateMachine;
 use Workflux\StateMachineInterface;
 use Workflux\State\FinalState;
 use Workflux\State\InitialState;
 use Workflux\State\InteractiveState;
-use Workflux\State\State;
 use Workflux\Tests\Builder\Fixture\EmptyClass;
 use Workflux\Tests\TestCase;
 use Workflux\Transition\Transition;
@@ -18,13 +19,13 @@ final class StateMachineBuilderTest extends TestCase
 {
     public function testBuild()
     {
-        $state_machine = (new StateMachineBuilder(StateMachine::CLASS))
+        $state_machine = (new StateMachineBuilder(StateMachine::class))
             ->addStateMachineName('video-transcoding')
-            ->addState($this->createState('initial', InitialState::CLASS))
+            ->addState($this->createState('initial', InitialState::class))
             ->addStates([
-                $this->createState('state1', InteractiveState::CLASS),
+                $this->createState('state1', InteractiveState::class),
                 $this->createState('state2'),
-                $this->createState('final', FinalState::CLASS)
+                $this->createState('final', FinalState::class)
             ])
             ->addTransition(new Transition('initial', 'state1'))
             ->addTransitions([
@@ -32,62 +33,52 @@ final class StateMachineBuilderTest extends TestCase
                 new Transition('state2', 'final')
             ])
             ->build();
-        $this->assertInstanceOf(StateMachineInterface::CLASS, $state_machine);
+        $this->assertInstanceOf(StateMachineInterface::class, $state_machine);
         $this->assertEquals('video-transcoding', $state_machine->getName());
     }
 
-    /**
-     * @expectedException Workflux\Error\MissingImplementation
-     */
     public function testMissingInterface()
     {
-        new StateMachineBuilder(EmptyClass::CLASS);
+        $this->expectException(MissingImplementation::class);
+        new StateMachineBuilder(EmptyClass::class);
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\MissingImplementation
-     */
     public function testNonExistantClass()
     {
+        $this->expectException(MissingImplementation::class);
         new StateMachineBuilder('FooBarMachine');
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\UnknownState
-     */
     public function testUnknownFromState()
     {
-        (new StateMachineBuilder(StateMachine::CLASS))
+        $this->expectException(UnknownState::class);
+        (new StateMachineBuilder(StateMachine::class))
             ->addStateMachineName('video-transcoding')
-            ->addState($this->createState('initial', InitialState::CLASS))
+            ->addState($this->createState('initial', InitialState::class))
             ->addState($this->createState('state1'))
-            ->addState($this->createState('final', FinalState::CLASS))
+            ->addState($this->createState('final', FinalState::class))
             ->addTransition(new Transition('start', 'state1'));
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\UnknownState
-     */
     public function testUnknownToState()
     {
-        (new StateMachineBuilder(StateMachine::CLASS))
+        $this->expectException(UnknownState::class);
+        (new StateMachineBuilder(StateMachine::class))
             ->addStateMachineName('video-transcoding')
-            ->addState($this->createState('initial', InitialState::CLASS))
+            ->addState($this->createState('initial', InitialState::class))
             ->addState($this->createState('state1'))
-            ->addState($this->createState('final', FinalState::CLASS))
+            ->addState($this->createState('final', FinalState::class))
             ->addTransition(new Transition('state1', 'state2'));
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\InvalidStructure
-     */
     public function testDuplicateTransition()
     {
-        (new StateMachineBuilder(StateMachine::CLASS))
+        $this->expectException(InvalidStructure::class);
+        (new StateMachineBuilder(StateMachine::class))
             ->addStateMachineName('video-transcoding')
-            ->addState($this->createState('initial', InitialState::CLASS))
+            ->addState($this->createState('initial', InitialState::class))
             ->addState($this->createState('state1'))
-            ->addState($this->createState('final', FinalState::CLASS))
+            ->addState($this->createState('final', FinalState::class))
             ->addTransition(new Transition('initial', 'state1'))
             ->addTransition(new Transition('initial', 'state1'));
     } // @codeCoverageIgnore

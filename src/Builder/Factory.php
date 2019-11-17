@@ -32,11 +32,11 @@ final class Factory implements FactoryInterface
      * @var mixed[] $default_classes
      */
     private static $default_classes = [
-        'initial' => InitialState::CLASS,
-        'interactive' => InteractiveState::CLASS,
-        'state' => State::CLASS,
-        'final' => FinalState::CLASS,
-        'transition' => Transition::CLASS
+        'initial' => InitialState::class,
+        'interactive' => InteractiveState::class,
+        'state' => State::class,
+        'final' => FinalState::class,
+        'transition' => Transition::class
     ];
 
     /**
@@ -105,9 +105,9 @@ final class Factory implements FactoryInterface
             $config['when'] = [ $transition->when->get() ];
         }
         $implementor = $transition->class->get() ?? $this->class_map->get('transition');
-        if (!in_array(TransitionInterface::CLASS, class_implements($implementor))) {
+        if (!in_array(TransitionInterface::class, class_implements($implementor))) {
             throw new MissingImplementation(
-                'Trying to create transition without implementing required '.TransitionInterface::CLASS
+                'Trying to create transition without implementing required '.TransitionInterface::class
             );
         }
         $constraints = [];
@@ -142,9 +142,9 @@ final class Factory implements FactoryInterface
                 $state_implementor = $this->class_map->get('state');
         }
         $state_implementor = $state->class->get() ?? $state_implementor;
-        if (!in_array(StateInterface::CLASS, class_implements($state_implementor))) {
+        if (!in_array(StateInterface::class, class_implements($state_implementor))) {
             throw new MissingImplementation(
-                'Trying to use a custom-state that does not implement required '.StateInterface::CLASS
+                'Trying to use a custom-state that does not implement required '.StateInterface::class
             );
         }
         return $state_implementor;

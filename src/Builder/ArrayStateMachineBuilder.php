@@ -43,7 +43,7 @@ final class ArrayStateMachineBuilder implements StateMachineBuilderInterface
             throw new ConfigError('Invalid statemachine configuration given: '.print_r($result->unwrap(), true));
         }
         list($states, $transitions) = $this->realizeConfig($data['states']);
-        $state_machine_class = Maybe::unit($this->config)->class->get() ?? StateMachine::CLASS;
+        $state_machine_class = Maybe::unit($this->config)->class->get() ?? StateMachine::class;
         return (new StateMachineBuilder($state_machine_class))
             ->addStateMachineName($data['name'])
             ->addStates($states)

@@ -5,13 +5,14 @@ namespace Workflux\Tests;
 use Shrink0r\PhpSchema\Factory;
 use Shrink0r\PhpSchema\Schema;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Workflux\Error\CorruptExecutionFlow;
+use Workflux\Error\ExecutionError;
 use Workflux\Param\Input;
 use Workflux\Param\Settings;
 use Workflux\StateMachine;
 use Workflux\State\FinalState;
 use Workflux\State\InitialState;
 use Workflux\State\InteractiveState;
-use Workflux\State\State;
 use Workflux\State\StateSet;
 use Workflux\Tests\Fixture\InactiveTransition;
 use Workflux\Tests\TestCase;
@@ -29,10 +30,10 @@ final class StateMachineTest extends TestCase
             new Factory
         );
         $states = new StateSet([
-            $this->createState('initial', InitialState::CLASS, null, $schema),
+            $this->createState('initial', InitialState::class, null, $schema),
             $this->createState('foobar'),
-            $this->createState('bar', InteractiveState::CLASS),
-            $this->createState('final', FinalState::CLASS)
+            $this->createState('bar', InteractiveState::class),
+            $this->createState('final', FinalState::class)
         ]);
         $transitions = (new TransitionSet)
             ->add(new Transition(
@@ -80,21 +81,21 @@ final class StateMachineTest extends TestCase
         $this->assertCount(5, $statemachine->getStateTransitions());
     }
 
-    /**
-     * @expectedException Workflux\Error\ExecutionError
-     */
     public function testMultipleActivatedTransitions()
     {
-        $this->expectExceptionMessage('Trying to activate more than one transition at a time. '.
-            'Transition: approval -> published was activated first. Now approval -> archive is being activated too.');
+        $this->expectException(ExecutionError::class);
+        $this->expectExceptionMessage(
+            'Trying to activate more than one transition at a time. '.
+            'Transition: approval -> published was activated first. Now approval -> archive is being activated too.'
+        );
 
         $states = new StateSet([
-            $this->createState('initial', InitialState::CLASS),
+            $this->createState('initial', InitialState::class),
             $this->createState('edit'),
             $this->createState('approval'),
             $this->createState('published'),
             $this->createState('archive'),
-            $this->createState('final', FinalState::CLASS)
+            $this->createState('final', FinalState::class)
         ]);
         $transitions = (new TransitionSet)
             ->add(new Transition('initial', 'edit'))
@@ -107,21 +108,21 @@ final class StateMachineTest extends TestCase
         $statemachine->execute(new Input);
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\CorruptExecutionFlow
-     */
     public function testInfiniteExecutionLoop()
     {
-        $this->expectExceptionMessage('Trying to execute more than the allowed number of 20 workflow steps.
-Looks like there is a loop between: approval -> published -> archive');
+        $this->expectException(CorruptExecutionFlow::class);
+        $this->expectExceptionMessage(
+            'Trying to execute more than the allowed number of 20 workflow steps.
+Looks like there is a loop between: approval -> published -> archive'
+        );
 
         $states = new StateSet([
-            $this->createState('initial', InitialState::CLASS),
+            $this->createState('initial', InitialState::class),
             $this->createState('edit'),
             $this->createState('approval'),
             $this->createState('published'),
             $this->createState('archive'),
-            $this->createState('final', FinalState::CLASS)
+            $this->createState('final', FinalState::class)
         ]);
         $transitions = (new TransitionSet)
             ->add(new Transition('initial', 'edit'))
@@ -134,32 +135,32 @@ Looks like there is a loop between: approval -> published -> archive');
         $statemachine->execute(new Input);
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\ExecutionError
-     * @expectedExceptionMessage Trying to (re)execute statemachine at final state: final
-     */
     public function testResumeOnFinalState()
     {
+        $this->expectException(ExecutionError::class);
+        $this->expectExceptionMessage(
+            'Trying to (re)execute statemachine at final state: final'
+        );
         $statemachine = $this->buildStateMachine();
         $statemachine->execute(new Input, 'final');
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\ExecutionError
-     * @expectedExceptionMessage Trying to start statemachine execution at unknown state: baz
-     */
     public function testResumeOnUnknownState()
     {
+        $this->expectException(ExecutionError::class);
+        $this->expectExceptionMessage(
+            'Trying to start statemachine execution at unknown state: baz'
+        );
         $statemachine = $this->buildStateMachine();
         $statemachine->execute(new Input, 'baz');
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\ExecutionError
-     * @expectedExceptionMessage Trying to resume statemachine executing without providing an event/signal.
-     */
     public function testResumeWithoutEvent()
     {
+        $this->expectException(ExecutionError::class);
+        $this->expectExceptionMessage(
+            'Trying to resume statemachine executing without providing an event/signal.'
+        );
         $statemachine = $this->buildStateMachine();
         $output = $statemachine->execute(new Input);
         $statemachine->execute(Input::fromOutput($output), $output->getCurrentState());
@@ -168,12 +169,12 @@ Looks like there is a loop between: approval -> published -> archive');
     private function buildStateMachine()
     {
         $states = new StateSet([
-            $this->createState('initial', InitialState::CLASS),
+            $this->createState('initial', InitialState::class),
             $this->createState('edit'),
-            $this->createState('approval', InteractiveState::CLASS),
+            $this->createState('approval', InteractiveState::class),
             $this->createState('published'),
             $this->createState('archive'),
-            $this->createState('final', FinalState::CLASS)
+            $this->createState('final', FinalState::class)
         ]);
         $transitions = (new TransitionSet)
             ->add(new Transition('initial', 'edit'))

@@ -2,6 +2,7 @@
 
 namespace Workflux\Tests\State;
 
+use Workflux\Error\InvalidStructure;
 use Workflux\State\FinalState;
 use Workflux\State\InitialState;
 use Workflux\State\StateInterface;
@@ -22,12 +23,12 @@ final class StateSetTest extends TestCase
     {
         $state_set = new StateSet($this->buildStateArray());
         list($initial_state, $all_states, $final_states) = $state_set->splat();
-        $this->assertInstanceOf(StateInterface::CLASS, $initial_state);
+        $this->assertInstanceOf(StateInterface::class, $initial_state);
         $this->assertTrue($initial_state->isInitial());
         $this->assertCount(5, $all_states);
-        $this->assertInstanceOf(StateMap::CLASS, $all_states);
+        $this->assertInstanceOf(StateMap::class, $all_states);
         $this->assertCount(1, $final_states);
-        $this->assertInstanceOf(StateMap::CLASS, $final_states);
+        $this->assertInstanceOf(StateMap::class, $final_states);
         $this->assertTrue($final_states->get('final')->isFinal());
     }
 
@@ -50,48 +51,48 @@ final class StateSetTest extends TestCase
         $this->assertEquals($states_array, $state_set->toArray());
     }
 
-    /**
-     * @expectedException Workflux\Error\InvalidStructure
-     * @expectedExceptionMessage Trying to add more than one initial state.
-     */
     public function testMultipleInitialStates()
     {
+        $this->expectException(InvalidStructure::class);
+        $this->expectExceptionMessage(
+            'Trying to add more than one initial state.'
+        );
         $states_array = $this->buildStateArray();
-        $states_array[] = $this->createState('snafu', InitialState::CLASS);
+        $states_array[] = $this->createState('snafu', InitialState::class);
         $state_set = new StateSet($states_array);
         $state_set->splat();
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\InvalidStructure
-     * @expectedExceptionMessage Trying to add state as initial and final at the same time.
-     */
     public function testInconsistentType()
     {
+        $this->expectException(InvalidStructure::class);
+        $this->expectExceptionMessage(
+            'Trying to add state as initial and final at the same time.'
+        );
         $states_array = $this->buildStateArray();
-        $states_array[] = $this->createState('snafu', TwoFaceState::CLASS);
+        $states_array[] = $this->createState('snafu', TwoFaceState::class);
         $state_set = new StateSet($states_array);
         $state_set->splat();
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\InvalidStructure
-     * @expectedExceptionMessage Trying to create statemachine without an initial state.
-     */
     public function testMissingInitialState()
     {
+        $this->expectException(InvalidStructure::class);
+        $this->expectExceptionMessage(
+            'Trying to create statemachine without an initial state.'
+        );
         $states_array = $this->buildStateArray();
         array_shift($states_array);
         $state_set = new StateSet($states_array);
         $state_set->splat();
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\InvalidStructure
-     * @expectedExceptionMessage Trying to create statemachine without at least one final state.
-     */
     public function testMissingFinalState()
     {
+        $this->expectException(InvalidStructure::class);
+        $this->expectExceptionMessage(
+            'Trying to create statemachine without at least one final state.'
+        );
         $states_array = $this->buildStateArray();
         array_pop($states_array);
         $state_set = new StateSet($states_array);
@@ -101,11 +102,11 @@ final class StateSetTest extends TestCase
     private function buildStateArray()
     {
         return [
-            $this->createState('initial', InitialState::CLASS),
+            $this->createState('initial', InitialState::class),
             $this->createState('foo'),
             $this->createState('bar'),
             $this->createState('foobar'),
-            $this->createState('final', FinalState::CLASS)
+            $this->createState('final', FinalState::class)
         ];
     }
 }

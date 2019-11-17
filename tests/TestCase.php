@@ -2,7 +2,7 @@
 
 namespace Workflux\Tests;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Shrink0r\PhpSchema\Factory;
 use Shrink0r\PhpSchema\Schema;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -11,7 +11,7 @@ use Workflux\State\Validator;
 use Workflux\State\State;
 use Workflux\State\StateInterface;
 
-class TestCase extends PHPUnit_Framework_TestCase
+class TestCase extends PHPUnitTestCase
 {
     private static $default_schema = [ 'type' => 'assoc', 'properties' =>  [ ':any_name:' => [ 'type' => 'any' ] ] ];
 

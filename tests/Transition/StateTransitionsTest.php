@@ -2,6 +2,7 @@
 
 namespace Workflux\Tests\Transition;
 
+use Workflux\Error\InvalidStructure;
 use Workflux\State\FinalState;
 use Workflux\State\InitialState;
 use Workflux\State\StateMap;
@@ -52,16 +53,16 @@ final class StateTransitionsTest extends TestCase
         $expected_transition_sets = [ 'initial', 'foo', 'bar', 'foobar' ];
         $state_transitions_array = $state_transitions->toArray();
         foreach ($expected_transition_sets as $expected_transition_set) {
-            $this->assertInstanceOf(TransitionSet::CLASS, $state_transitions_array[$expected_transition_set]);
+            $this->assertInstanceOf(TransitionSet::class, $state_transitions_array[$expected_transition_set]);
         }
     }
 
-    /**
-     * @expectedException Workflux\Error\InvalidStructure
-     * @expectedExceptionMessage Trying to transition to unknown state: foobaz
-     */
     public function testNonExistantToState()
     {
+        $this->expectException(InvalidStructure::class);
+        $this->expectExceptionMessage(
+            'Trying to transition to unknown state: foobaz'
+        );
         $state_map = new StateMap($this->buildStateArray());
         $transition_set = new TransitionSet([
             new Transition('initial', 'foo'),
@@ -72,12 +73,12 @@ final class StateTransitionsTest extends TestCase
         new StateTransitions($state_map, $transition_set);
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\InvalidStructure
-     * @expectedExceptionMessage Trying to transition from unknown state: fu
-     */
     public function testNonExistantFromState()
     {
+        $this->expectException(InvalidStructure::class);
+        $this->expectExceptionMessage(
+            'Trying to transition from unknown state: fu'
+        );
         $state_map = new StateMap($this->buildStateArray());
         $transition_set = new TransitionSet([
             new Transition('initial', 'foo'),
@@ -88,12 +89,12 @@ final class StateTransitionsTest extends TestCase
         new StateTransitions($state_map, $transition_set);
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\InvalidStructure
-     * @expectedExceptionMessage Trying to transition to initial-state: initial
-     */
     public function testTransitionToInitialState()
     {
+        $this->expectException(InvalidStructure::class);
+        $this->expectExceptionMessage(
+            'Trying to transition to initial-state: initial'
+        );
         $state_map = new StateMap($this->buildStateArray());
         $transition_set = new TransitionSet([
             new Transition('initial', 'foo'),
@@ -104,12 +105,12 @@ final class StateTransitionsTest extends TestCase
         new StateTransitions($state_map, $transition_set);
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\InvalidStructure
-     * @expectedExceptionMessage Trying to transition from final-state: final
-     */
     public function testTransitionFromFinalState()
     {
+        $this->expectException(InvalidStructure::class);
+        $this->expectExceptionMessage(
+            'Trying to transition from final-state: final'
+        );
         $state_map = new StateMap($this->buildStateArray());
         $transition_set = new TransitionSet([
             new Transition('initial', 'foo'),
@@ -121,12 +122,12 @@ final class StateTransitionsTest extends TestCase
         new StateTransitions($state_map, $transition_set);
     } // @codeCoverageIgnore
 
-    /**
-     * @expectedException Workflux\Error\InvalidStructure
-     * @expectedExceptionMessage Not all states are properly connected.
-     */
     public function testStatesNotConnected()
     {
+        $this->expectException(InvalidStructure::class);
+        $this->expectExceptionMessage(
+            'Not all states are properly connected.'
+        );
         $state_map = new StateMap($this->buildStateArray());
         $transition_set = new TransitionSet([
             new Transition('initial', 'foo'),
@@ -139,11 +140,11 @@ final class StateTransitionsTest extends TestCase
     private function buildStateArray()
     {
         return [
-            $this->createState('initial', InitialState::CLASS),
+            $this->createState('initial', InitialState::class),
             $this->createState('foo'),
             $this->createState('bar'),
             $this->createState('foobar'),
-            $this->createState('final', FinalState::CLASS)
+            $this->createState('final', FinalState::class)
         ];
     }
 }

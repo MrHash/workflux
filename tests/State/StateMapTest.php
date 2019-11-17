@@ -18,14 +18,14 @@ final class StateMapTest extends TestCase
 
     public function testPut()
     {
-        $state_map = (new StateMap)->put($this->createState('initial', InitialState::CLASS));
+        $state_map = (new StateMap)->put($this->createState('initial', InitialState::class));
         $this->assertCount(1, $state_map);
     }
 
     public function testGet()
     {
         $state_map = new StateMap([
-            $this->createState('initial', InitialState::CLASS),
+            $this->createState('initial', InitialState::class),
             $foo_state = $this->createState('foo')
         ]);
         $this->assertEquals($foo_state, $state_map->get('foo'));
@@ -89,11 +89,11 @@ final class StateMapTest extends TestCase
     private function buildStateArray()
     {
         return [
-            $this->createState('initial', InitialState::CLASS),
+            $this->createState('initial', InitialState::class),
             $this->createState('foo'),
             $this->createState('bar'),
             $this->createState('foobar'),
-            $this->createState('final', FinalState::CLASS)
+            $this->createState('final', FinalState::class)
         ];
     }
 }

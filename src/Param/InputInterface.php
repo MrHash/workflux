@@ -2,7 +2,6 @@
 
 namespace Workflux\Param;
 
-use Workflux\Param\InputInterface;
 use Workflux\Param\OutputInterface;
 
 interface InputInterface extends ParamHolderInterface

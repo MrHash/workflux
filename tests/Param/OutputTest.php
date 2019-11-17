@@ -11,7 +11,7 @@ final class OutputTest extends TestCase
 {
     public function testConstruct()
     {
-        $this->assertInstanceOf(OutputInterface::CLASS, new Output('initial'));
+        $this->assertInstanceOf(OutputInterface::class, new Output('initial'));
     }
 
     public function testToArray()
@@ -33,7 +33,7 @@ final class OutputTest extends TestCase
     {
         $params = [ 'foo' => 'bar', 'msg' => 'hello world' ];
         $output = Output::fromInput('initial', new Input($params));
-        $this->assertInstanceOf(OutputInterface::CLASS, $output);
+        $this->assertInstanceOf(OutputInterface::class, $output);
         $this->assertEquals([ 'params' => $params, 'current_state' => 'initial' ], $output->toArray());
     }
 }

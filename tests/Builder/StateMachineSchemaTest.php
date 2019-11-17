@@ -38,6 +38,6 @@ final class StateMachineSchemaTest extends TestCase
     public function testGetFactory()
     {
         $schema = new StateMachineSchema;
-        $this->assertInstanceOf(FactoryInterface::CLASS, $schema->getFactory());
+        $this->assertInstanceOf(FactoryInterface::class, $schema->getFactory());
     }
 }
